@@ -1,0 +1,45 @@
+body {
+	background: #fff;
+	font: 18px/1.4 Helvicta, Arial, sans-serif;
+	color: #333;
+}
+
+h1 {
+	font-family: "Helvicta Neue", Helvicta, Arial, sans-serif;
+	color: #222;
+	font-weight: 200;
+	font-size: 32px; 
+}
+
+.date {
+	font-style: italic;
+	color: #666;
+}
+
+.container {
+  	margin: 0 auto;
+  	max-width: 740px;
+  	padding: 0 10px;
+  	width: 100%;
+}
+
+.posts > .post {
+  	padding-bottom: 2em;
+  	border-bottom: 1px solid #888;
+}
+
+.posts > .post:last-child {
+  	padding-bottom: 1em;
+  	border-bottom: none;
+}
+
+.post { 
+  blockquote {
+    margin: 1.8em .8em;
+    border-left: 2px solid $666;
+    padding: 0.1em 1em;
+    color: $666;
+    font-size: 22px;
+    font-style: italic;
+  }
+}
