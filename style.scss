@@ -5,10 +5,10 @@ body {
 }
 
 h1 {
-	font-family: "Helvicta Neue", Helvicta, Arial, sans-serif;
+	font-family: Helvicta, Arial, sans-serif;
 	color: #222;
 	font-weight: 200;
-	font-size: 32px; 
+	font-size: 38px; 
 }
 
 .date {
@@ -21,6 +21,16 @@ h1 {
   	max-width: 740px;
   	padding: 0 10px;
   	width: 100%;
+}
+
+nav {
+	float: right;
+	margin-top: 23px;
+}
+
+a {
+	text-align: right;
+	color: #222222;
 }
 
 .posts > .post {

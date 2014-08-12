@@ -5,16 +5,22 @@
 	<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.scss" />
 </head>
 <body>
+	<nav>
+		{% for post in site.posts %}
+			<a href="{{ post.url }}">{{ post.title }}</a>
+			<br />
+		{% endfor %}
+	</nav>
 	<div class="container">
 		<div class="posts">
 			{% for post in site.posts %}
-			<article class="post">
-				<h1>{{ post.title }}</h1>
-			
-				<div>{{ post.content }}</div>
-			
-				<div class="date">Written on {{ post.date | date: "%B %e, %Y" }}</div>
-			</article>
+				<article class="post">
+					<h1>{{ post.title }}</h1>
+				
+					<div>{{ post.content }}</div>
+				
+					<div class="date">Written on {{ post.date | date: "%B %e, %Y" }}</div>
+				</article>
 			{% endfor %}
 		</div>
 	</div>
