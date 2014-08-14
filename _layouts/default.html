@@ -1,0 +1,15 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.scss" />
+</head>
+<body>
+	<nav>
+		{% for post in site.posts %}
+			<a href="{{ post.url }}">{{ post.title }}</a>
+			<br />
+		{% endfor %}
+	</nav>
+	<div class="container">
+		{{ content }}
+	</div>
+</body>
