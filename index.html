@@ -6,7 +6,8 @@ layout: default
 		<article class="post">
 			<h1>{{ post.title }}</h1>
 			<div class="date">{{ post.date | date: "%e %B, %Y" }}</div>
-			<div>{{ post.content }}</div>
+			<div>{{ post.excerpt }}</a></div>
+			<a href="{{ post.url }}">More...</a>
 		</article>
 	{% endfor %}
 </div>
