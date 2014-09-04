@@ -22,9 +22,15 @@ public class FakeGroceryDetailsService implements GroceryDetailsService {
 }
 {% endhighlight %}
 
-We wanted to be able to control the data from our tests so that it the test scenario was clear to anyone read them. As such, we decided to start, populate, and stop our own gemfire cache from the tests. Here is a short guide in setting up a cache server to allow your tests to exercise the code in your application that interacts with a gemfire cache.
+There were a few issues with this:
 
-_Just as a side note, this can be done by creating a cache.xml file, similar to a clientCache.xml, however I prefer to keep as much as I can in Java code and out of XML._
+- Anyone writing new tests needed to have knowledge of this class
+- This class had to live in the main source directory, and as such is part of your production code
+- A mechanism to switch between this fake object and the real implementation is required
+
+As such, we decided to fire up our own gemfire cache server.
+
+> Just as a side note, this can be done by creating a cache.xml file, similar to a clientCache.xml, however I prefer to keep as much as I can in Java code and out of XML.
 
 ### Starting Cache Server
 - importance of distributed 0
