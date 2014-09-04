@@ -11,8 +11,8 @@ public class FakeGroceryDetailsService implements GroceryDetailsService {
 
 	{
 		groceryDetails = new HashMap<String, GroceryDetails>();
-		groceryDetails.put("101", new GroceryDetails("Apple", "£0.30"));
-		groceryDetails.put("102", new GroceryDetails("Banana", "£0.15"));
+		groceryDetails.put("101", new GroceryDetails("Apple", "0.30"));
+		groceryDetails.put("102", new GroceryDetails("Banana", "0.15"));
 	}
 
 	@Override

@@ -18,10 +18,10 @@ h1 {
 }
 
 .container {
-  	margin: 0 auto;
-  	max-width: 740px;
-  	padding: 0 10px;
-  	width: 100%;
+	margin: 0 auto;
+	max-width: 740px;
+	padding: 0 10px;
+	width: 100%;
 }
 
 nav {
@@ -35,22 +35,20 @@ a {
 }
 
 .posts > .post {
-  	padding-bottom: 2em;
-  	border-bottom: 1px solid #888;
+	padding-bottom: 2em;
+	border-bottom: 1px solid #888;
 }
 
 .posts > .post:last-child {
-  	padding-bottom: 1em;
-  	border-bottom: none;
+	padding-bottom: 1em;
+	border-bottom: none;
 }
 
-.post { 
-  blockquote {
-    margin: 1.8em .8em;
-    border-left: 2px solid $666;
-    padding: 0.1em 1em;
-    color: $666;
-    font-size: 22px;
-    font-style: italic;
-  }
+blockquote {
+	margin: 1.8em .8em;
+	border-left: 2px solid #666;
+	padding: 0.1em 1em;
+	color: #666;
+	font-size: 16px;
+	font-style: italic;
 }
