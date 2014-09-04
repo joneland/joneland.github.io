@@ -3,7 +3,7 @@ layout: post
 title: Gemfire Server for Test Environments
 ---
 
-If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running beahviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) to avoid interaction with a gemfire cache, however we agreed that the data being returned from the fake object was not visible from our behaviour tests. It went something like this, although I will use a Grocery store as an example instead of our actual domain.
+If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running beahviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) in our test to avoid interaction with a gemfire cache, however we agreed that the data being returned from the fake object was not visible from our behaviour tests. It went something like this, although I will use a Grocery store as an example instead of our actual domain.
 
 {% highlight java linenos %}
 public class FakeGroceryDetailsService implements GroceryDetailsService {
@@ -28,9 +28,9 @@ There were a few issues with this:
 - This class had to live in the main source directory, and as such is part of your production code
 - A mechanism to switch between this fake object and the real implementation is required
 
-As such, we decided to fire up our own gemfire cache server.
+As such, we decided to build our own gemfire cache server.
 
-> Just as a side note, this can be done by creating a cache.xml file, similar to a clientCache.xml, however I prefer to keep as much as I can in Java code and out of XML.
+> This can be done by creating a cache.xml file and wrapping the regions with a server tag, however I prefer to keep as much as I can in Java code.
 
 ### Starting Cache Server
 - importance of distributed 0
