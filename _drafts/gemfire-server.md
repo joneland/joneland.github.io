@@ -3,7 +3,7 @@ layout: post
 title: Gemfire Server for Test Environments
 ---
 
-If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running beahviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) in our test to avoid interaction with a gemfire cache, however we agreed that the data being returned from the fake object was not visible from our behaviour tests. It went something like this, although I will use a Grocery store as an example instead of our actual domain.
+If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running beahviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) in our test to avoid interaction with a gemfire cache, however we were concerned that the data being returned from the fake object was not visible from our behaviour tests. It went something like this (although I will use a Grocery store as an example instead of our actual domain):
 
 {% highlight java linenos %}
 public class FakeGroceryDetailsService implements GroceryDetailsService {
@@ -24,9 +24,9 @@ public class FakeGroceryDetailsService implements GroceryDetailsService {
 
 There were a few issues with this:
 
-- Anyone writing new tests needed to have knowledge of this class
-- This class had to live in the main source directory, and as such is part of your production code
-- A mechanism to switch between this fake object and the real implementation is required
+- Anyone writing new tests needed to have knowledge of the fake object
+- The fake object had to live in the main source directory, and as such is part of your production code
+- A mechanism is required to switch between the fake object and the real implementation
 
 As such, we decided to build our own gemfire cache server.
 
@@ -34,7 +34,7 @@ As such, we decided to build our own gemfire cache server.
 
 ### Starting Cache Server
 
-Starting up a cache server is simple enough.
+Starting up a cache server is simple enough (and the things that are not so obvious are explained below).
 
 {% highlight java linenos %}
 public class GroceryStoreCache {
@@ -55,7 +55,7 @@ public class GroceryStoreCache {
 
 	private void configureRegions(CacheRegion... regions) {
 		for (CacheRegion region : regions) {
-			cache.createRegionFactory(RegionShortcut.LOCAL).create(region.name());
+			cache.createRegionFactory(LOCAL).create(region.name());
 		}
 	}
 
@@ -65,8 +65,6 @@ public class GroceryStoreCache {
 
 }
 {% endhighlight %}
-
-There are a couple things to note in the code snippet above.
 
 #### Multicast Port
 The multicast port is set to zero to prevent the cache server discovering other gemfire cache instances running on a network. With the gemfire default license, there is a restriction in place that prevents more than three instances of a cache being started using the same multicast port. By setting to zero, the cache will not conflict with any other gemfire cache servers you have running on your build server.
@@ -108,15 +106,7 @@ With the cache server up and running, the only thing left to do is populate it. 
 - The object that is added to the cache must implement Serializable
 - The object must be retrievable by an ID
 
-With that in mind, an item can be added to the region with the following code:
-
-{% highlight java linenos %}
-public void populate(CacheRegion region, CacheItem cacheItem) {
-	cache.getRegion(region.name()).put(cacheItem.getId(), cacheItem);
-}
-{% endhighlight %}
-
-CacheItem is just an interface that follows the two rules mentioned.
+With that in mind, an interface is used to ensure both of those rules are covered.
 
 {% highlight java linenos %}
 public interface CacheItem extends Serializable {
@@ -124,10 +114,44 @@ public interface CacheItem extends Serializable {
 }
 {% endhighlight %}
 
-By simply creating a running cache server with JMX enabled, the populating of regions can easily be performed from test scenarios. 
+Then within the cache server code, a populate method can be exposed to allow a class implementing CacheItem to be added to a region.
+
+{% highlight java linenos %}
+public void populate(CacheRegion region, CacheItem cacheItem) {
+	cache.getRegion(region.name()).put(cacheItem.getId(), cacheItem);
+}
+{% endhighlight %}
+
+For this grocery store cache example, it would make sense to populate the cache with a grocery. The override of toString is to allow the contents of a cache region to be asserted in a test.
+
+{% highlight java linenos %}
+public class Grocery implements CacheItem {
+	private static final long serialVersionUID = -1145880717859373291L;
+
+	private int id;
+	private String name;
+	private String price;
+
+	public Grocery(int id, String name, String price) {
+		this.id = id;
+		this.name = name;
+		this.price = price;
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return format("id: %d, name: %s, price: %s", id, name, price);
+	}
+}
+{% endhighlight %}
 
 ### Printing Items in a Region
-Due to issues with external systems, we ended up using this cache in our smoke environment (our first integrated environment we deploy to). We found it useful to be able to view the contents of a cache region at any given time. Retrieving the contents of a region on the cache is also super simple:
+Due to issues with external systems, we ended up using this cache in our smoke environment (our first integrated environment we deploy to). We found it useful to be able to view the contents of a cache region at any given time. Retrieving the contents of a region on the cache is also straight forward.
 
 {% highlight java linenos %}
 public String print(CacheRegion region) {
@@ -139,5 +163,18 @@ public String print(CacheRegion region) {
 }
 {% endhighlight %}
 
-### Github
-A full version and test for this can be found at <a href="https://github.com/joneland/gemfire-sandbox" target="_blank">github.com/joneland/gemfire-sandbox</a>.
+### Clearing a Region
+As the region is essentially a map, clearing the region is performed by retrieving the region and calling clear.
+
+{% highlight java linenos %}
+public void clear(CacheRegion region) {
+	cache.getRegion(region.name()).clear();
+}
+{% endhighlight %}
+
+### Wrapping Up
+An example of this cache server can be found at <a href="https://github.com/joneland/gemfire-sandbox" target="_blank">https://github.com/joneland/gemfire-sandbox</a>.
+
+The example includes a runner and exposes some of the cache methods via JMX.
+
+Hopefully this post demonstrates how simple it is to get a gemfire cache server up and running for test enrvironments.
