@@ -176,7 +176,7 @@ This just needs updating to be:
 ### Wrapping Up
 An example of this cache server can be found at <a href="https://github.com/joneland/gemfire-sandbox" target="_blank">https://github.com/joneland/gemfire-sandbox</a>.
 
-The example includes a runner and exposes some of the cache methods via JMX. By using a JMX client to take care of all the MBean server invocation, it became easy for us to manipulate the cache from our tests. <a href="https://github.com/joneland/gemfire-sandbox/blob/master/src/main/java/com/sandbox/gemfire/server/jmx/CacheJMXClient.java" target="_blank">CacheJMXClient</a> is an example of this. We used this client to populate and clear the cache between test scenarios.
+The example includes a runner and exposes some of the cache methods via JMX. By using a JMX client to take care of all the MBean server invocations, it became easy for us to manipulate the cache from our tests. <a href="https://github.com/joneland/gemfire-sandbox/blob/master/src/main/java/com/sandbox/gemfire/server/jmx/CacheJMXClient.java" target="_blank">CacheJMXClient</a> is an example of this. We used this client to populate and clear the cache between test scenarios.
 
 {% highlight java linenos %}
 CacheJMXClient cacheClient = new CacheJMXClient("localhost", "10000");
