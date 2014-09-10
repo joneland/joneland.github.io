@@ -81,25 +81,6 @@ public enum CacheRegion {
 
 These are added to the cache server using the region factory with LOCAL state. As the cache server will not talk across a network, changes to a region will not need to be reflected in peers.
 
-#### Connecting to the Cache Server
-There is one subtle difference when connecting to a cache server. Instead of using a locator, a server is used instead. As the majority of gemfire users will be using a client-cache.xml file to define pools and regions, I will include the XML changes required for the client.
-
-Previously your client-cache.xml file may have contained a pool element like this:
-
-{% highlight xml linenos %}
-<pool name="client">
-	<locator host="localhost" port="10000" />
-</pool>
-{% endhighlight %}
-
-This just needs updating to be:
-
-{% highlight xml linenos %}
-<pool name="client">
-	<server host="localhost" port="10000" />
-</pool>
-{% endhighlight %}
-
 ### Populating Regions
 With the cache server up and running, the only thing left to do is populate it. There are only two rules that must be followed when populating a region:
 
@@ -172,9 +153,37 @@ public void clear(CacheRegion region) {
 }
 {% endhighlight %}
 
+### Connecting to the Cache Server
+There is one subtle difference when connecting to a cache server. Instead of using a locator, a server is used instead. As the majority of gemfire users will be using a client-cache.xml file to define pools and regions, I will include the XML changes required for the client.
+
+Previously your client-cache.xml file may have contained a pool element like this:
+
+{% highlight xml linenos %}
+<pool name="client">
+	<locator host="localhost" port="10000" />
+</pool>
+{% endhighlight %}
+
+This just needs updating to be:
+
+{% highlight xml linenos %}
+<pool name="client">
+	<server host="localhost" port="10000" />
+</pool>
+{% endhighlight %}
+
+
 ### Wrapping Up
 An example of this cache server can be found at <a href="https://github.com/joneland/gemfire-sandbox" target="_blank">https://github.com/joneland/gemfire-sandbox</a>.
 
-The example includes a runner and exposes some of the cache methods via JMX.
+The example includes a runner and exposes some of the cache methods via JMX. By using a JMX client to take care of all the MBean server invocation, it became easy for us to manipulate the cache from our tests. <a href="https://github.com/joneland/gemfire-sandbox/blob/master/src/main/java/com/sandbox/gemfire/server/jmx/CacheJMXClient.java" target="_blank">CacheJMXClient</a> is an example of this. We used this client to populate and clear the cache between test scenarios.
 
-Hopefully this post demonstrates how simple it is to get a gemfire cache server up and running for test enrvironments.
+{% highlight java linenos %}
+CacheJMXClient cacheClient = new CacheJMXClient("localhost", "10000");
+
+cacheClient.populateGrocery(101, "Apple", "0.30");
+
+cacheClient.clearGroceries();
+{% endhighlight %}
+
+And that is it! Hopefully this post demonstrates how simple it is to get a gemfire cache server up and running for test environments.
