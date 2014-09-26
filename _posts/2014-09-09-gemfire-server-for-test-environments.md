@@ -3,7 +3,7 @@ layout: post
 title: Gemfire Server for Test Environments
 ---
 
-If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running beahviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) in our test to avoid interaction with a gemfire cache, however we were concerned that the data being returned from the fake object was not visible from our behaviour tests. It went something like this (although I will use a Grocery store as an example instead of our actual domain):
+If your application is integrating with a gemfire cache, you may have chosen to stub out this boundary when running behaviour, acceptance or system tests. Intially we were using a fake object (<a href="http://www.martinfowler.com/bliki/TestDouble.html" target="_blank">see test doubles</a>) in our test to avoid interaction with a gemfire cache, however we were concerned that the data being returned from the fake object was not visible from our behaviour tests. It went something like this (although I will use a Grocery store as an example instead of our actual domain):
 
 {% highlight java linenos %}
 public class FakeGroceryDetailsService implements GroceryDetailsService {
